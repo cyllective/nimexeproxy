@@ -1,5 +1,6 @@
 IMGNAME="nimexeproxy"
-BINPATH=""
+PROXYBIN=""
+BINNAME=""
 
 make: indocker
 
@@ -8,11 +9,11 @@ image:
 
 indocker: image
 	rm -rf *.exe
-	docker run --rm -v ${PWD}:/src ${IMGNAME} ${BINPATH}
+	docker run --rm -v ${PWD}:/src ${IMGNAME} '${PROXYBIN}' '${BINNAME}'
 
 local:
 	rm -rf *.exe
-	/bin/sh build.sh ${BINPATH}
+	/bin/sh build.sh '${PROXYBIN}' '${BINNAME}'
 
 cleanup:
 	rm -rf *.exe

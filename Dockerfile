@@ -1,4 +1,4 @@
-FROM nimlang/nim:1.6.18-ubuntu
+FROM nimlang/nim:1.6.14-ubuntu
 
 RUN apt update 
 RUN apt install build-essential gcc-mingw-w64 -y --no-install-recommends
